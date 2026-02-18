@@ -1,12 +1,12 @@
 ---
-title: "How I Code with Claude"
+title: "How I use claude code"
 date: "2026-01-19"
 description: "My workflow for building software with AI assistance."
 ---
 
-Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
+I started using claude code very soon after release, initially mostly for fixing tests, linter errors in the background, while using cursor mostly. Then slowly, like many, started using it more and more. Since about August 2025, it has been main driver for development at work and on side projects. Throughout the process, I've found a few workflows and patterns that consistently help me effectively work with claude. 
 
-## The Setup
+## Planning is all you need
 
 Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
 
