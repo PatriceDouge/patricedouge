@@ -1,15 +1,15 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { ChevronLeft, ChevronRight } from "lucide-react";
+import { ChevronLeft, ChevronRight, X } from "lucide-react";
 import {
   getWorkout,
   getTrainingWeek,
   formatDateKey,
-  type Workout,
   type WorkoutCategory,
   type CompletionStatus,
 } from "@/lib/workouts";
+import { LiftDetail } from "@/components/LiftDetail";
 
 type ViewMode = "month" | "week" | "day";
 
@@ -217,7 +217,7 @@ export function WorkoutCalendar() {
               return (
                 <div
                   key={`empty-${i}`}
-                  className="border-b border-r border-border min-h-[68px] sm:min-h-[84px] first:border-l"
+                  className="border-b border-r border-l border-border min-h-[68px] sm:min-h-[120px]"
                 />
               );
             }
@@ -236,11 +236,10 @@ export function WorkoutCalendar() {
                 }
                 onDoubleClick={() => goToDay(dateStr)}
                 className={`
-                  border-b border-r border-border min-h-[68px] sm:min-h-[84px]
-                  p-1 sm:p-1.5 text-left transition-all relative
+                  border-b border-r border-l border-border min-h-[68px] sm:min-h-[120px]
+                  p-1 sm:p-2 text-left transition-all relative
                   hover:bg-muted-foreground/5 cursor-pointer
-                  ${i % 7 === 0 ? "border-l" : ""}
-                  ${workout ? `border-l-4 ${statusBorder(status)} ${statusBg(status)}` : ""}
+                  ${status ? `border-l-4 ${statusBorder(status)} ${statusBg(status)}` : ""}
                   ${isSelected ? "ring-2 ring-accent ring-inset" : ""}
                 `}
               >
@@ -260,27 +259,24 @@ export function WorkoutCalendar() {
                   {day}
                 </span>
 
-                {/* Workout label */}
+                {/* Workout info */}
                 {workout && (
-                  <div className="mt-0.5">
+                  <div className="mt-1 min-w-0 space-y-0.5">
                     <span
-                      className={`text-[10px] sm:text-xs leading-tight block truncate ${
+                      className={`text-[10px] sm:text-xs leading-tight block truncate font-medium ${
                         workout.category === "race"
-                          ? "font-semibold text-amber-600 dark:text-amber-400"
+                          ? "text-amber-600 dark:text-amber-400"
                           : categoryColor(workout.category)
                       }`}
                     >
                       {workout.label}
                     </span>
+                    <p className="text-[10px] sm:text-[11px] leading-snug text-muted-foreground line-clamp-3">
+                      {workout.description}
+                    </p>
                   </div>
                 )}
 
-                {/* Status dot */}
-                {workout && status && (
-                  <span
-                    className={`absolute top-1 right-1 w-2 h-2 rounded-full ${statusDot(status)}`}
-                  />
-                )}
               </button>
             );
           })}
@@ -338,9 +334,8 @@ export function WorkoutCalendar() {
                 className={`
                   border-b border-r border-border min-h-[120px]
                   p-2 text-left transition-all
-                  hover:bg-muted-foreground/5 cursor-pointer
-                  ${i === 0 ? "border-l" : ""}
-                  ${workout ? `border-l-4 ${statusBorder(status)} ${statusBg(status)}` : ""}
+                  hover:bg-muted-foreground/5 cursor-pointer border-l
+                  ${status ? `border-l-4 ${statusBorder(status)} ${statusBg(status)}` : ""}
                   ${isSelected ? "ring-2 ring-accent ring-inset" : ""}
                 `}
               >
@@ -383,8 +378,8 @@ export function WorkoutCalendar() {
                   setSelected(selected === dateStr ? null : dateStr)
                 }
                 className={`
-                  w-full text-left p-3 rounded-lg border transition-all
-                  ${workout ? `border-l-4 ${statusBorder(status)} ${statusBg(status)}` : "border-border"}
+                  w-full text-left p-3 rounded-lg border border-border transition-all
+                  ${status ? `border-l-4 ${statusBorder(status)} ${statusBg(status)}` : ""}
                   ${isSelected ? "ring-2 ring-accent" : ""}
                 `}
               >
@@ -460,10 +455,10 @@ export function WorkoutCalendar() {
           <div className="space-y-6">
             {/* Workout card */}
             <div
-              className={`rounded-lg border p-4 ${
-                workout
+              className={`rounded-lg border border-border p-4 ${
+                status
                   ? `border-l-4 ${statusBorder(status)} ${statusBg(status)}`
-                  : "border-border"
+                  : ""
               }`}
             >
               <div className="flex items-center gap-2 mb-2">
@@ -484,9 +479,14 @@ export function WorkoutCalendar() {
                 </span>
               </div>
               <h3 className="text-lg font-semibold mb-1">{workout.label}</h3>
-              <p className="text-muted leading-relaxed">
-                {workout.description}
-              </p>
+              {workout.category !== "lift" && (
+                <p className="text-muted leading-relaxed">
+                  {workout.description}
+                </p>
+              )}
+              {workout.category === "lift" && (
+                <LiftDetail dateStr={dateStr} workoutLabel={workout.label} />
+              )}
             </div>
 
             {/* Status controls */}
@@ -544,10 +544,10 @@ export function WorkoutCalendar() {
 
     return (
       <div
-        className={`mt-4 rounded-lg border p-4 ${
-          workout
+        className={`mt-4 rounded-lg border border-border p-4 ${
+          status
             ? `border-l-4 ${statusBorder(status)} ${statusBg(status)}`
-            : "border-border"
+            : ""
         }`}
       >
         <div className="flex items-start justify-between mb-3">
@@ -562,9 +562,9 @@ export function WorkoutCalendar() {
           </div>
           <button
             onClick={() => setSelected(null)}
-            className="text-muted-foreground hover:text-foreground transition-colors text-sm"
+            className="text-muted-foreground hover:text-foreground transition-colors p-1"
           >
-            Close
+            <X className="w-4 h-4" />
           </button>
         </div>
 
@@ -583,7 +583,16 @@ export function WorkoutCalendar() {
                 </span>
                 <span className="text-sm font-medium">{workout.label}</span>
               </div>
-              <p className="text-sm text-muted">{workout.description}</p>
+              {workout.category !== "lift" && (
+                <p className="text-sm text-muted">{workout.description}</p>
+              )}
+              {workout.category === "lift" && (
+                <LiftDetail
+                  dateStr={selected}
+                  workoutLabel={workout.label}
+                  compact
+                />
+              )}
             </div>
 
             {/* Inline status controls */}
