@@ -8,7 +8,7 @@ export default function Home() {
 
   return (
     <main className="min-h-screen px-6 py-8 md:py-12 bg-background text-foreground transition-colors">
-      <div className="mx-auto max-w-2xl">
+      <div className="mx-auto max-w-xl">
         <div className="flex justify-between items-start mb-16">
           <Image
             src="/logo.svg"
@@ -23,7 +23,25 @@ export default function Home() {
 
         <header className="mb-16">
           <p className="text-muted leading-relaxed">
-            I&apos;m Patrice Dougé, a software engineer at <a href="https://wistia.com" className="text-muted underline decoration-[0.5px] decoration-muted-foreground underline-offset-2 hover:text-foreground transition-colors">Wistia</a>. Born in Pétion-Ville, Haiti, currently based in Sarasota, FL. I enjoy <a href="https://github.com/PatriceDouge" className="text-muted underline decoration-[0.5px] decoration-muted-foreground underline-offset-2 hover:text-foreground transition-colors">coding</a>, <a href="https://strava.app.link/eV9Oa35B3Zb" className="text-muted underline decoration-[0.5px] decoration-muted-foreground underline-offset-2 hover:text-foreground transition-colors">training</a>, and being a girl dad of two. These days I&apos;m learning as much as I can about coding agents, AI and how to build products users love.
+            I&apos;m Patrice Dougé, a software engineer at <a href="https://wistia.com" className="text-foreground hover:underline underline-offset-2 transition-colors">Wistia</a>. Born in Pétion-Ville, Haiti, currently based in Sarasota, FL. These days I&apos;m learning as much as I can about coding agents, AI and how to build products users love.
+          </p>
+          <br />
+          <p className="text-muted leading-relaxed">
+            Most of my time I'm either{" "}
+            <a
+              href="https://github.com/PatriceDouge"
+              className="text-foreground hover:underline underline-offset-2 transition-colors"
+            >
+              coding
+            </a>
+            {", "}
+            <Link
+              href="/training"
+              className="text-foreground hover:underline underline-offset-2 transition-colors"
+            >
+              training
+            </Link>
+            {", or being a girl dad of two."} 
           </p>
         </header>
 
