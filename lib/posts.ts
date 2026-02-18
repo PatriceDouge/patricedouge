@@ -11,6 +11,7 @@ export interface PostData {
   title: string;
   date: string;
   description: string;
+  visible?: boolean;
   content?: string;
 }
 
@@ -29,8 +30,10 @@ export function getAllPosts(): PostData[] {
         title: data.title,
         date: data.date,
         description: data.description || "",
+        visible: data.visible !== false,
       };
-    });
+    })
+    .filter((post) => post.visible);
 
   return allPosts.sort((a, b) => (a.date < b.date ? 1 : -1));
 }

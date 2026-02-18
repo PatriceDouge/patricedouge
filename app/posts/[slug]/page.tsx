@@ -48,7 +48,7 @@ export default async function PostPage({ params }: Props) {
 
   return (
     <main className="min-h-screen px-6 py-16 md:py-24 bg-background text-foreground transition-colors">
-      <article className="mx-auto max-w-2xl">
+      <article className="mx-auto max-w-xl">
         <div className="flex justify-between items-center">
           <Link
             href="/"
@@ -59,11 +59,11 @@ export default async function PostPage({ params }: Props) {
           <ThemeToggle />
         </div>
 
-        <header className="mt-8 mb-12">
-          <time className="text-sm text-muted-foreground">{formatDate(post.date)}</time>
-          <h1 className="mt-2 text-3xl font-bold tracking-tight">
+        <header className="mt-8 mb-8">
+          <h1 className="text-3xl font-bold tracking-tight">
             {post.title}
           </h1>
+          <time className="mt-3 block text-sm text-muted-foreground">{formatDate(post.date)}</time>
         </header>
 
         <div
