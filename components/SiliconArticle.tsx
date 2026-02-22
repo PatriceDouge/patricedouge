@@ -765,7 +765,7 @@ export function SiliconArticle() {
 
         <header className="mt-8 mb-12">
           <h1 className="text-3xl font-bold tracking-tight">
-            The Path to Ubiquitous AI
+            The Path to Ubiquitous AI, Visualized
           </h1>
           <time className="mt-3 block text-sm text-muted-foreground">
             February 21, 2026
@@ -985,7 +985,7 @@ export function SiliconArticle() {
               target="_blank"
               rel="noopener noreferrer"
             >
-              The Path to Ubiquitous AI
+              The Path to Ubiquitous AI, Visualized
             </a>{" "}
             by Taalas.
           </p>
