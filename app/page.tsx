@@ -41,7 +41,7 @@ export default function Home() {
           </p>
           <br />
           <p className="text-muted leading-relaxed">
-            It&apos;s an incredible time to be a software engineer. On one hand, it&apos;s empowering to know how much leverage one has using these AI tools. At the same time, it can be overwhelming feeling behind with all the different ways of doing things. There&apos;s an interesting tension between still shipping beautiful code and shipping fast as long as it works. I&apos;m trying to find that balance.
+            It&apos;s an incredible time to be a software engineer. On one hand, it&apos;s empowering to know how much leverage one has using these AI tools. At the same time, it can be overwhelming to feel behind with all the different ways of doing things. There&apos;s an interesting tension between shipping beautiful code and shipping fast as long as it works. I&apos;m working to find that balance and continue growing as an engineer.
           </p>
         </header>
 
