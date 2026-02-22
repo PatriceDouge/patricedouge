@@ -4,22 +4,29 @@ date: "2026-01-19"
 description: "My workflow for building software with AI."
 ---
 
-My AI coding workflow has followed a similar (sequence) as most people. Things got intereseting once I really started using cursor. Initially hesitant with Agent mode, mostly using chat mode and stepping through each change manually/with tab. Then claude code came out. 
+here are some rough notes on my day-to-day workflow working with claude code & codex. i plan on fleshing this out into a more polished article soon.
 
-Initially used mostly for fixing tests, linter errors in the background, while using cursor as my main driver. Then slowly, like many, started using it more and more. Since about August 2025, it has been main driver for development at work and on side projects. Throughout the process, I've found a few workflows and patterns that consistently help me effectively work with claude. 
+plan mode, add all context, attach files, specs, thinking. instruct to understand current flow/surface area e2e, in detail, can be helpful to also have it map it out using states/diagram/ascii. "interview me in detail using the AskUserQuestionTool about literally anything: technical implementation, UI & UX, concerns, tradeoffs, etc. but make sure the questions are not obvious". context is everything. be intentional, think hard about what you want the model to consider & use to plan changes. have been using superwhisper more to just talk out loud my thoughts.
 
-## Planning is all you need
+refine plan, make sure its up to standards & expectations, instruct to think critically, ensure follows existing best practices & patterns etc, make things reusable, have unit tests that make sense and add value, test key integration points. sometimes can be helpful to rope in gpt 5.3 codex at this stage to make sure you're not missing anything. take your time
 
-For larger features, refactors, or investigations, I always start in plan mode. 
+have claude create a doc in a notes dir or project root with the implementation plan and relevant context, this will come in handy
 
-## The Workflow
+let claude cook, if smaller feature just do it in same session. if larger or alot of tokens for plan(s), context, create new session, re-ground with plan file(s) & relevant context. sweet spot is 40-70% context used, after that, inconsistent results 
 
-Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut fugit, sed quia consequuntur magni dolores eos qui ratione voluptatem sequi nesciunt. Neque porro quisquam est, qui dolorem ipsum quia dolor sit amet.
+review every change, ask questions, consider downstream impacts, is this the best approach? can we simplify this? make faster, get details right on ui. phone gpt 5.3 codex, have it review the changes, anything we can simplify, any considerations we missed?
 
-At vero eos et accusamus et iusto odio dignissimos ducimus qui blanditiis praesentium voluptatum deleniti atque corrupti quos dolores et quas molestias excepturi sint occaecati cupiditate non provident.
+use images. can pass alot of context in an image. use cleanshot to annotate images.
 
-## Lessons Learned
+commit iteratively, git not scary anymore. let claude handle conflicts, commit strategy, split PRs, rebase, etc
 
-Similique sunt in culpa qui officia deserunt mollitia animi, id est laborum et dolorum fuga. Et harum quidem rerum facilis est et expedita distinctio. Nam libero tempore, cum soluta nobis est eligendi optio cumque nihil impedit quo minus id quod maxime placeat facere possimus.
+instruct to make sure changes pass linter, tests pass
 
-Omnis voluptas assumenda est, omnis dolor repellendus. Temporibus autem quibusdam et aut officiis debitis aut rerum necessitatibus saepe eveniet ut et voluptates repudiandae sint et molestiae non recusandae.
+draft PR, review once again in github, question everything 
+
+ship it
+
+smaller stuff: 
+- i tend to not globabally set permissions for editting, etc. i like manually accepting things, help steer, drive things rather than let model loose. etc. 
+- use codex to review things. especially backend. review this PR/git diff e2e, undestand the flow e2e, is intent clear? anything we can simplify? anything we can do better? why did we do this.., can we do this differently? is this following best practices & patterns? what are potential side effects with this change that i might have missed?  
+- mcps like playwright, skills, slash commands, hooks ive used inconsistently, just prompting, basic refinement over and over and staying in the loop has worked well for me
