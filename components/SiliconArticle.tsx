@@ -242,154 +242,244 @@ function ArchitectureComparison() {
 }
 
 function ExecutionComparison() {
+  const steps = [
+    { label: "FETCH", y: 20 },
+    { label: "DECODE", y: 66 },
+    { label: "SCHEDULE", y: 112 },
+    { label: "LOAD WEIGHTS", y: 158, accent: true },
+    { label: "EXECUTE", y: 204 },
+    { label: "WRITE BACK", y: 250 },
+  ];
+
   return (
-    <Figure caption="A GPU runs thousands of instruction cycles per token. An ASIC flows data through a fixed pipeline.">
-      <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+    <Figure caption="The GPU repeats a 6-step instruction cycle thousands of times per token. In the ASIC, data flows straight through fixed silicon.">
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-8">
+        {/* GPU - instruction cycle as a visual loop */}
         <div>
           <div className="text-xs text-muted-foreground mb-4 font-medium uppercase tracking-wider">
             GPU · instruction cycle
           </div>
-          <div className="space-y-2">
-            {[
-              "Fetch instruction",
-              "Decode operation",
-              "Schedule to core",
-              "Load weights from HBM",
-              "Execute multiply",
-              "Write result back",
-            ].map((step, i) => (
-              <div key={i} className="flex items-center gap-3">
-                <span className="font-mono text-xs text-muted-foreground/50 w-4 shrink-0 text-right">
-                  {i + 1}
-                </span>
-                <span className="text-sm text-muted">{step}</span>
-              </div>
+          <svg viewBox="0 0 260 340" className="w-full">
+            {steps.map((step, i) => (
+              <g key={i}>
+                <rect
+                  x="56" y={step.y} width="176" height="30" rx="4"
+                  fill={step.accent ? "var(--accent)" : "var(--muted-foreground)"}
+                  opacity={step.accent ? 0.08 : 0.04}
+                  stroke={step.accent ? "var(--accent)" : "var(--border)"}
+                  strokeWidth={step.accent ? 1 : 0.75}
+                />
+                <text
+                  x="144" y={step.y + 19} textAnchor="middle" fontSize="10"
+                  style={{
+                    ...mono,
+                    fill: step.accent ? "var(--accent)" : "var(--muted-foreground)",
+                  }}
+                >
+                  {step.label}
+                </text>
+                {i < steps.length - 1 && (
+                  <line
+                    x1="144" y1={step.y + 30} x2="144" y2={steps[i + 1].y}
+                    stroke="var(--border)" strokeWidth="0.75"
+                  />
+                )}
+              </g>
             ))}
-            <div className="flex items-center gap-3 pt-1">
-              <span className="font-mono text-xs text-muted-foreground/30 w-4 shrink-0 text-right">
-                ↺
-              </span>
-              <span className="text-sm text-muted-foreground italic">
-                repeat ×1000s per token
-              </span>
-            </div>
-          </div>
+
+            {/* Loop-back dashed path */}
+            <path
+              d="M144,280 L144,296 L32,296 L32,20 L54,20"
+              fill="none" stroke="var(--muted-foreground)" strokeWidth="0.75"
+              strokeDasharray="4 3" opacity="0.25"
+            />
+            <polygon
+              points="54,16 54,24 58,20"
+              fill="var(--muted-foreground)" opacity="0.25"
+            />
+
+            <text
+              x="144" y="326" textAnchor="middle" fontSize="9"
+              style={{ ...mono, fill: "var(--muted-foreground)", opacity: 0.5 }}
+            >
+              {"× 4,096 per token"}
+            </text>
+
+            {/* Animated dot cycling the loop */}
+            <circle r="3" fill="var(--muted-foreground)" opacity="0.4">
+              <animateMotion
+                dur="3.5s" repeatCount="indefinite"
+                path="M144,35 L144,296 L32,296 L32,20 L144,20 L144,35"
+              />
+            </circle>
+          </svg>
         </div>
 
+        {/* Taalas - pipeline with expanded layer internals */}
         <div>
           <div className="text-xs text-accent mb-4 font-medium uppercase tracking-wider">
             Taalas · hardwired pipeline
           </div>
-          <svg viewBox="0 0 200 250" className="w-full">
+          <svg viewBox="0 0 260 340" className="w-full">
+            {/* Token in */}
             <text
-              x="100" y="12" textAnchor="middle" fontSize="9"
+              x="130" y="12" textAnchor="middle" fontSize="9"
               style={{ ...mono, fill: "var(--muted-foreground)" }}
             >
               token in
             </text>
-            <line x1="100" y1="18" x2="100" y2="28" stroke="var(--accent)" strokeWidth="0.75" />
+            <line x1="130" y1="18" x2="130" y2="26" stroke="var(--accent)" strokeWidth="0.75" />
 
+            {/* Embed */}
             <rect
-              x="30" y="30" width="140" height="24" rx="4"
-              fill="var(--accent)" opacity="0.1"
+              x="40" y="28" width="180" height="24" rx="4"
+              fill="var(--accent)" opacity="0.08"
               stroke="var(--accent)" strokeWidth="0.5"
             />
             <text
-              x="100" y="46" textAnchor="middle" fontSize="9" fontWeight="600"
+              x="130" y="44" textAnchor="middle" fontSize="9" fontWeight="600"
               style={{ ...mono, fill: "var(--foreground)" }}
             >
               EMBED
             </text>
-            <line x1="100" y1="54" x2="100" y2="62" stroke="var(--accent)" strokeWidth="0.75" />
+            {[-20, -8, 4, 16].map((dx, i) => (
+              <circle key={`e${i}`} cx={130 + dx} cy={49} r="1" fill="var(--accent)" opacity="0.35" />
+            ))}
+            <line x1="130" y1="52" x2="130" y2="60" stroke="var(--accent)" strokeWidth="0.75" />
 
+            {/* Layer 1 - expanded container */}
             <rect
-              x="30" y="64" width="140" height="30" rx="4"
-              fill="var(--accent)" opacity="0.1"
-              stroke="var(--accent)" strokeWidth="0.5"
+              x="20" y="62" width="220" height="138" rx="6"
+              fill="var(--accent)" opacity="0.03"
+              stroke="var(--accent)" strokeWidth="0.75"
             />
             <text
-              x="100" y="77" textAnchor="middle" fontSize="9" fontWeight="600"
-              style={{ ...mono, fill: "var(--foreground)" }}
+              x="32" y="76" fontSize="8" fontWeight="600"
+              style={{ ...mono, fill: "var(--accent)", opacity: 0.6 }}
             >
               LAYER 1
             </text>
-            <text
-              x="100" y="89" textAnchor="middle" fontSize="8"
-              style={{ ...mono, fill: "var(--muted-foreground)" }}
-            >
-              attn → ffn
-            </text>
-            <line x1="100" y1="94" x2="100" y2="102" stroke="var(--accent)" strokeWidth="0.75" />
 
+            {/* Norm */}
             <rect
-              x="30" y="104" width="140" height="30" rx="4"
-              fill="var(--accent)" opacity="0.1"
-              stroke="var(--accent)" strokeWidth="0.5"
+              x="40" y="82" width="180" height="14" rx="2"
+              fill="var(--accent)" opacity="0.05"
+              stroke="var(--accent)" strokeWidth="0.3"
             />
             <text
-              x="100" y="117" textAnchor="middle" fontSize="9" fontWeight="600"
-              style={{ ...mono, fill: "var(--foreground)" }}
-            >
-              LAYER 2
-            </text>
-            <text
-              x="100" y="129" textAnchor="middle" fontSize="8"
+              x="130" y="92" textAnchor="middle" fontSize="7"
               style={{ ...mono, fill: "var(--muted-foreground)" }}
             >
-              attn → ffn
+              NORM
             </text>
+            <line x1="130" y1="96" x2="130" y2="104" stroke="var(--accent)" strokeWidth="0.5" />
 
-            {[0, 1, 2].map((i) => (
-              <circle
-                key={i} cx="100" cy={146 + i * 8} r="1.5"
-                fill="var(--accent)" opacity="0.4"
-              />
+            {/* Q, K, V projections */}
+            {[
+              { label: "Q", x: 44 },
+              { label: "K", x: 103 },
+              { label: "V", x: 162 },
+            ].map((p) => (
+              <g key={p.label}>
+                <rect
+                  x={p.x} y={106} width="54" height="22" rx="3"
+                  fill="var(--accent)" opacity="0.1"
+                  stroke="var(--accent)" strokeWidth="0.5"
+                />
+                <text
+                  x={p.x + 27} y={119} textAnchor="middle" fontSize="9"
+                  style={{ ...mono, fill: "var(--foreground)" }}
+                >
+                  {p.label}
+                </text>
+                {[-8, 0, 8].map((dx, i) => (
+                  <circle key={i} cx={p.x + 27 + dx} cy={124} r="1" fill="var(--accent)" opacity="0.35" />
+                ))}
+              </g>
             ))}
 
-            <line x1="100" y1="168" x2="100" y2="174" stroke="var(--accent)" strokeWidth="0.75" />
+            {/* Converge lines to attention */}
+            <line x1="71" y1="128" x2="130" y2="140" stroke="var(--accent)" strokeWidth="0.4" opacity="0.4" />
+            <line x1="130" y1="128" x2="130" y2="140" stroke="var(--accent)" strokeWidth="0.4" opacity="0.4" />
+            <line x1="189" y1="128" x2="130" y2="140" stroke="var(--accent)" strokeWidth="0.4" opacity="0.4" />
+
+            {/* Attention */}
             <rect
-              x="30" y="176" width="140" height="30" rx="4"
+              x="60" y="142" width="140" height="20" rx="3"
+              fill="var(--accent)" opacity="0.08"
+              stroke="var(--accent)" strokeWidth="0.5"
+            />
+            <text
+              x="130" y="155" textAnchor="middle" fontSize="8"
+              style={{ ...mono, fill: "var(--foreground)" }}
+            >
+              ATTEND
+            </text>
+            <line x1="130" y1="162" x2="130" y2="170" stroke="var(--accent)" strokeWidth="0.5" />
+
+            {/* FFN */}
+            <rect
+              x="60" y="172" width="140" height="20" rx="3"
               fill="var(--accent)" opacity="0.1"
               stroke="var(--accent)" strokeWidth="0.5"
             />
             <text
-              x="100" y="189" textAnchor="middle" fontSize="9" fontWeight="600"
+              x="130" y="185" textAnchor="middle" fontSize="8"
+              style={{ ...mono, fill: "var(--foreground)" }}
+            >
+              FFN
+            </text>
+            {[-12, -4, 4, 12].map((dx, i) => (
+              <circle key={`f${i}`} cx={130 + dx} cy={189} r="1" fill="var(--accent)" opacity="0.35" />
+            ))}
+
+            {/* End of Layer 1 → dots */}
+            <line x1="130" y1="200" x2="130" y2="210" stroke="var(--accent)" strokeWidth="0.75" />
+            {[0, 1, 2].map((i) => (
+              <circle key={i} cx="130" cy={220 + i * 10} r="1.5" fill="var(--accent)" opacity="0.4" />
+            ))}
+
+            {/* Layer 32 */}
+            <line x1="130" y1="248" x2="130" y2="254" stroke="var(--accent)" strokeWidth="0.75" />
+            <rect
+              x="40" y="256" width="180" height="26" rx="4"
+              fill="var(--accent)" opacity="0.08"
+              stroke="var(--accent)" strokeWidth="0.5"
+            />
+            <text
+              x="130" y="273" textAnchor="middle" fontSize="9" fontWeight="600"
               style={{ ...mono, fill: "var(--foreground)" }}
             >
               LAYER 32
             </text>
-            <text
-              x="100" y="201" textAnchor="middle" fontSize="8"
-              style={{ ...mono, fill: "var(--muted-foreground)" }}
-            >
-              attn → ffn
-            </text>
-            <line x1="100" y1="206" x2="100" y2="212" stroke="var(--accent)" strokeWidth="0.75" />
+            <line x1="130" y1="282" x2="130" y2="288" stroke="var(--accent)" strokeWidth="0.75" />
 
+            {/* Output */}
             <rect
-              x="30" y="214" width="140" height="24" rx="4"
-              fill="var(--accent)" opacity="0.1"
+              x="40" y="290" width="180" height="24" rx="4"
+              fill="var(--accent)" opacity="0.08"
               stroke="var(--accent)" strokeWidth="0.5"
             />
             <text
-              x="100" y="230" textAnchor="middle" fontSize="9" fontWeight="600"
+              x="130" y="306" textAnchor="middle" fontSize="9" fontWeight="600"
               style={{ ...mono, fill: "var(--foreground)" }}
             >
               OUTPUT
             </text>
+            <line x1="130" y1="314" x2="130" y2="320" stroke="var(--accent)" strokeWidth="0.75" />
 
-            <line x1="100" y1="238" x2="100" y2="244" stroke="var(--accent)" strokeWidth="0.75" />
             <text
-              x="100" y="254" textAnchor="middle" fontSize="9"
+              x="130" y="334" textAnchor="middle" fontSize="9"
               style={{ ...mono, fill: "var(--muted-foreground)" }}
             >
               token out
             </text>
 
+            {/* Animated dot flowing straight through */}
             <circle r="3" fill="var(--accent)" opacity="0.6">
               <animateMotion
-                dur="3s" repeatCount="indefinite"
-                path="M100,18 L100,244"
+                dur="3.5s" repeatCount="indefinite"
+                path="M130,18 L130,334"
               />
             </circle>
           </svg>
@@ -400,86 +490,173 @@ function ExecutionComparison() {
 }
 
 function DieComparison() {
-  const blocks: [number, number, string, boolean][] = [
-    [0, 0, "CU", true], [0, 1, "CU", true], [0, 2, "CU", true], [0, 3, "CU", true],
-    [1, 0, "CU", true], [1, 1, "CU", true], [1, 2, "L2$", false], [1, 3, "IC", false],
-    [2, 0, "MC", false], [2, 1, "RF", false], [2, 2, "SCH", false], [2, 3, "IO", false],
-    [3, 0, "DMA", false], [3, 1, "RT", false], [3, 2, "L1$", false], [3, 3, "CTL", false],
+  const overhead = [
+    { label: "Cache", x: 8, y: 92, w: 100, h: 32 },
+    { label: "Instruction", x: 112, y: 92, w: 100, h: 32 },
+    { label: "Scheduler", x: 8, y: 128, w: 68, h: 32 },
+    { label: "Registers", x: 80, y: 128, w: 68, h: 32 },
+    { label: "I/O", x: 152, y: 128, w: 60, h: 32 },
+    { label: "Mem Controller", x: 8, y: 164, w: 136, h: 32 },
+    { label: "DMA", x: 148, y: 164, w: 64, h: 32 },
   ];
 
+  const layers = [0, 1, 2, 3];
+
   return (
-    <Figure>
+    <Figure caption="On a GPU, ~60% of silicon is infrastructure that doesn't compute tokens. On a model-specific ASIC, every block runs part of the model.">
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+        {/* GPU die - realistic layout */}
         <div>
           <div className="text-xs text-muted-foreground mb-3 font-medium uppercase tracking-wider">
             General Purpose
           </div>
-          <svg viewBox="0 0 200 200" className="w-full">
+          <svg viewBox="0 0 220 230" className="w-full">
             <rect
-              x="0" y="0" width="200" height="200" rx="6"
+              x="0" y="0" width="220" height="230" rx="6"
               fill="none" stroke="var(--border)" strokeWidth="1"
             />
-            {blocks.map(([row, col, label, active]) => (
-              <g key={`${row}-${col}`}>
+
+            {/* Compute area - active, highlighted */}
+            <rect
+              x="8" y="8" width="204" height="76" rx="4"
+              fill="var(--accent)" opacity="0.12"
+              stroke="var(--accent)" strokeWidth="0.5"
+            />
+            {/* Core grid inside compute area */}
+            {Array.from({ length: 2 }).map((_, row) =>
+              Array.from({ length: 4 }).map((_, col) => (
                 <rect
-                  x={8 + col * 47} y={8 + row * 47}
-                  width="42" height="42" rx="3"
-                  fill={active ? "var(--accent)" : "var(--muted-foreground)"}
-                  opacity={active ? 0.2 : 0.06}
-                  stroke={active ? "var(--accent)" : "var(--border)"}
-                  strokeWidth="0.5"
+                  key={`c-${row}-${col}`}
+                  x={16 + col * 48} y={16 + row * 32}
+                  width="40" height="24" rx="2"
+                  fill="var(--accent)" opacity="0.1"
+                />
+              ))
+            )}
+            <text
+              x="110" y="78" textAnchor="middle" fontSize="8"
+              style={{ ...mono, fill: "var(--accent)", opacity: 0.7 }}
+            >
+              Compute Cores
+            </text>
+
+            {/* Overhead blocks - very dim */}
+            {overhead.map((b) => (
+              <g key={b.label}>
+                <rect
+                  x={b.x} y={b.y} width={b.w} height={b.h} rx="3"
+                  fill="var(--muted-foreground)" opacity="0.04"
+                  stroke="var(--border)" strokeWidth="0.5"
                 />
                 <text
-                  x={29 + col * 47} y={33 + row * 47}
-                  textAnchor="middle" fontSize="9"
-                  style={{
-                    ...mono,
-                    fill: "var(--muted-foreground)",
-                    opacity: active ? 0.8 : 0.3,
-                  }}
+                  x={b.x + b.w / 2} y={b.y + b.h / 2 + 3}
+                  textAnchor="middle" fontSize="8"
+                  style={{ ...mono, fill: "var(--muted-foreground)", opacity: 0.25 }}
                 >
-                  {label}
+                  {b.label}
                 </text>
               </g>
             ))}
+
+            <text
+              x="110" y="214" textAnchor="middle" fontSize="7"
+              style={{ ...mono, fill: "var(--muted-foreground)", opacity: 0.2 }}
+            >
+              idle during inference
+            </text>
           </svg>
           <div className="text-xs text-muted-foreground mt-2 text-center">
             ~40% of silicon active during inference
           </div>
         </div>
 
+        {/* Model-specific die - labeled transformer blocks */}
         <div>
           <div className="text-xs text-accent mb-3 font-medium uppercase tracking-wider">
             Model Specific
           </div>
-          <svg viewBox="0 0 200 200" className="w-full">
+          <svg viewBox="0 0 220 230" className="w-full">
             <rect
-              x="0" y="0" width="200" height="200" rx="6"
+              x="0" y="0" width="220" height="230" rx="6"
               fill="none" stroke="var(--accent)" strokeWidth="1" opacity="0.4"
             />
-            {Array.from({ length: 4 }).map((_, row) =>
-              Array.from({ length: 4 }).map((_, col) => (
-                <g key={`${row}-${col}`}>
-                  <rect
-                    x={8 + col * 47} y={8 + row * 47}
-                    width="42" height="42" rx="3"
-                    fill="var(--accent)" opacity="0.15"
-                    stroke="var(--accent)" strokeWidth="0.5"
-                  />
-                  <circle
-                    cx={29 + col * 47} cy={29 + row * 47} r="4"
-                    fill="var(--accent)"
-                  >
-                    <animate
-                      attributeName="opacity"
-                      values="0.15;0.5;0.15" dur="2s"
-                      begin={`${(row * 4 + col) * 0.12}s`}
-                      repeatCount="indefinite"
-                    />
-                  </circle>
-                </g>
-              ))
-            )}
+
+            {/* Embed strip */}
+            <rect
+              x="8" y="8" width="204" height="24" rx="3"
+              fill="var(--accent)" opacity="0.15"
+              stroke="var(--accent)" strokeWidth="0.5"
+            />
+            <text
+              x="110" y="24" textAnchor="middle" fontSize="8"
+              style={{ ...mono, fill: "var(--foreground)" }}
+            >
+              EMBED
+            </text>
+
+            {/* 4 rows of ATTN + FFN blocks */}
+            {layers.map((row) => (
+              <g key={`layer-${row}`}>
+                <rect
+                  x="8" y={40 + row * 38} width="100" height="32" rx="3"
+                  fill="var(--accent)" opacity="0.15"
+                  stroke="var(--accent)" strokeWidth="0.5"
+                />
+                <text
+                  x="58" y={60 + row * 38} textAnchor="middle" fontSize="8"
+                  style={{ ...mono, fill: "var(--foreground)" }}
+                >
+                  {`ATTN ${row * 8 + 1}–${(row + 1) * 8}`}
+                </text>
+
+                <rect
+                  x="112" y={40 + row * 38} width="100" height="32" rx="3"
+                  fill="var(--accent)" opacity="0.15"
+                  stroke="var(--accent)" strokeWidth="0.5"
+                />
+                <text
+                  x="162" y={60 + row * 38} textAnchor="middle" fontSize="8"
+                  style={{ ...mono, fill: "var(--foreground)" }}
+                >
+                  {`FFN ${row * 8 + 1}–${(row + 1) * 8}`}
+                </text>
+              </g>
+            ))}
+
+            {/* Output strip */}
+            <rect
+              x="8" y="194" width="204" height="24" rx="3"
+              fill="var(--accent)" opacity="0.15"
+              stroke="var(--accent)" strokeWidth="0.5"
+            />
+            <text
+              x="110" y="210" textAnchor="middle" fontSize="8"
+              style={{ ...mono, fill: "var(--foreground)" }}
+            >
+              OUTPUT
+            </text>
+
+            {/* Subtle pulse across blocks */}
+            {[
+              { x: 8, y: 40, w: 100, h: 32 },
+              { x: 112, y: 78, w: 100, h: 32 },
+              { x: 8, y: 116, w: 100, h: 32 },
+              { x: 112, y: 154, w: 100, h: 32 },
+              { x: 8, y: 8, w: 204, h: 24 },
+              { x: 8, y: 194, w: 204, h: 24 },
+            ].map((b, i) => (
+              <rect
+                key={`pulse-${i}`}
+                x={b.x} y={b.y} width={b.w} height={b.h} rx="3"
+                fill="var(--accent)"
+              >
+                <animate
+                  attributeName="opacity"
+                  values="0;0.15;0" dur="2.5s"
+                  begin={`${i * 0.4}s`} repeatCount="indefinite"
+                />
+              </rect>
+            ))}
           </svg>
           <div className="text-xs text-accent mt-2 text-center">
             100% serves the model
