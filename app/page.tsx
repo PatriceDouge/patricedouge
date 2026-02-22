@@ -23,11 +23,7 @@ export default function Home() {
 
         <header className="mb-16">
           <p className="text-muted leading-relaxed">
-            I&apos;m Patrice Dougé, a software engineer at <a href="https://wistia.com" className="text-foreground hover:underline underline-offset-2 transition-colors">Wistia</a>. Born in Pétion-Ville, Haiti, currently based in Sarasota, FL. These days I&apos;m learning as much as I can about coding agents, AI and how to build products users love.
-          </p>
-          <br />
-          <p className="text-muted leading-relaxed">
-            Most of my time I'm either{" "}
+            I&apos;m Patrice Dougé, a software engineer at <a href="https://wistia.com" className="text-foreground hover:underline underline-offset-2 transition-colors">Wistia</a>. Born in Pétion-Ville, Haiti, currently based in Sarasota, FL. These days I&apos;m learning as much as I can about coding agents, AI and how to build products users love. Most of my time I&apos;m either{" "}
             <a
               href="https://github.com/PatriceDouge"
               className="text-foreground hover:underline underline-offset-2 transition-colors"
@@ -41,7 +37,11 @@ export default function Home() {
             >
               training
             </Link>
-            {", or being a girl dad of two."} 
+            {", or being a girl dad of two."}
+          </p>
+          <br />
+          <p className="text-muted leading-relaxed">
+            It&apos;s an incredible time to be a software engineer. On one hand, it&apos;s empowering to know how much leverage one has using these AI tools. At the same time, it can be overwhelming feeling behind with all the different ways of doing things. There&apos;s an interesting tension between still shipping beautiful code and shipping fast as long as it works. I&apos;m trying to find that balance.
           </p>
         </header>
 
