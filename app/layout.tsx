@@ -19,10 +19,10 @@ export const metadata: Metadata = {
     default: "Patrice Douge",
     template: "%s | Patrice Douge",
   },
-  description: "Software engineer. Writing about programming and technology.",
+  description: "Software engineer. Dad. Lifts heavy, runs far.",
   openGraph: {
     title: "Patrice Douge",
-    description: "Software engineer. Writing about programming and technology.",
+    description: "Software engineer. Dad. Lifts heavy, runs far.",
     url: "https://patricedouge.com",
     siteName: "Patrice Douge",
     locale: "en_US",
@@ -31,7 +31,7 @@ export const metadata: Metadata = {
   twitter: {
     card: "summary_large_image",
     title: "Patrice Douge",
-    description: "Software engineer. Writing about programming and technology.",
+    description: "Software engineer. Dad. Lifts heavy, runs far.",
   },
   robots: {
     index: true,

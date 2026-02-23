@@ -8,6 +8,6 @@ export default async function Image() {
   return generateOGImage({
     title: "The Path to Ubiquitous AI, Visualized",
     description:
-      "A visual deep dive into how custom silicon could make AI inference 10x cheaper.",
+      "A visual breakdown of the path to ubiquitous AI, built with Claude Code.",
   });
 }
