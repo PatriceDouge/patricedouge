@@ -30,3 +30,4 @@ smaller stuff:
 - i tend to not globabally set permissions for editting, etc. i like manually accepting things, help steer, drive things rather than let model loose. etc. 
 - use codex to review things. especially backend. review this PR/git diff e2e, undestand the flow e2e, is intent clear? anything we can simplify? anything we can do better? why did we do this.., can we do this differently? is this following best practices & patterns? what are potential side effects with this change that i might have missed?  
 - mcps like playwright, skills, slash commands, hooks ive used inconsistently, just prompting, basic refinement over and over and staying in the loop has worked well for me
+- starting from scratch when a session doesn't go well with learnings can be helpful
